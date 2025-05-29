@@ -1,0 +1,6 @@
+@Neo.Capture_HostAddress = http://localhost:5022
+
+GET {{Neo.Capture_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
