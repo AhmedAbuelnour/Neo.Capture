@@ -12,7 +12,11 @@ namespace Neo.Capture.Infrastructure.Implementations.Repositories
             return await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task<int> CheckInAsync(CheckInLocation checkInLocation, CancellationToken cancellationToken)
+        {
+            _dbContext.Set<CheckInLocation>().Add(checkInLocation);
 
-
+            return await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

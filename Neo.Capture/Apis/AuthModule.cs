@@ -5,7 +5,7 @@ using Neo.Capture.Application.Features.Register;
 
 namespace Neo.Capture.Apis
 {
-    public class AuthModules : IModule
+    public class AuthModule : IModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

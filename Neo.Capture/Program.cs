@@ -1,6 +1,8 @@
 using LowCodeHub.MinimalEndpoints.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Neo.Capture.Application.Interfaces.Repositories;
 using Neo.Capture.Application.Interfaces.Services;
@@ -10,6 +12,7 @@ using Neo.Capture.Infrastructure;
 using Neo.Capture.Infrastructure.Implementations.Repositories;
 using Neo.Capture.Infrastructure.Implementations.Services;
 using Neo.Common.UserProvider;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,9 +77,32 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddAuthentication("Bearer");
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+        options.RequireHttpsMetadata = false; // for dev only
+        options.SaveToken = true;
 
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = "Neo.Capture",
+
+            ValidateAudience = true,           // set false if you don't care about audience
+            ValidAudience = "Neo.Capture",
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(2),
+
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"))
+        };
+    });
 builder.Services.AddScoped<IPasswordHasher<Profile>, PasswordHasher<Profile>>();
+
+builder.Services.AddScoped<ICloudStorageService, GoogleCloudStorageService>();
 
 builder.Services.AddScoped<JwtTokenProvider>();
 

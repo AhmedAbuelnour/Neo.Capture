@@ -1,10 +1,11 @@
 ﻿using LowCodeHub.MinimalEndpoints.Abstractions;
 using LowCodeHub.MinimalEndpoints.Extensions;
 using Neo.Capture.Application.Features.AddLocation;
+using Neo.Capture.Application.Features.CheckIn;
 
 namespace Neo.Capture.Apis
 {
-    public class LocationModules : IModule
+    public class LocationModule : IModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
@@ -14,6 +15,8 @@ namespace Neo.Capture.Apis
                             .WithOpenApi();
 
             group.MapEndpoint<AddLocationEndpoint>();
+
+            group.MapEndpoint<CheckInEndpoint>();
         }
     }
 }

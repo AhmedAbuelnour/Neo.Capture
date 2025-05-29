@@ -10,6 +10,6 @@ namespace Neo.Capture.Domain.Entities
 
         // Navigation property (optional if using ORM like EF Core)
         public Profile Profile { get; set; }
-        public CheckInLocation CheckIn { get; set; }  // One-to-one
+        public CheckInLocation? CheckIn { get; set; }  // One-to-one
     }
 }

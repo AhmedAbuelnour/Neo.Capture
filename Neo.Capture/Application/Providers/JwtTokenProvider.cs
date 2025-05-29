@@ -36,6 +36,7 @@ namespace Neo.Capture.Application.Providers
                 Expires = DateTime.UtcNow.AddYears(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F")), SecurityAlgorithms.HmacSha256),
                 Issuer = "Neo.Capture",
+                Audience = "Neo.Capture",
                 IssuedAt = DateTime.UtcNow,
             };
 

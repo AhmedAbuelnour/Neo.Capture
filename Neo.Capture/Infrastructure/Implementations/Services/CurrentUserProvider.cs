@@ -1,8 +1,8 @@
-﻿using Neo.Common.UserProvider;
+﻿using Microsoft.IdentityModel.JsonWebTokens;
+using Neo.Common.UserProvider;
 using Neo.Common.UserProvider.Models;
-using System.IdentityModel.Tokens.Jwt;
 
-namespace Neo.Capture.Application.Interfaces.Services
+namespace Neo.Capture.Infrastructure.Implementations.Services
 {
     public class CurrentUserProvider(IHttpContextAccessor contextAccessor) : ICurrentUserProvider
     {

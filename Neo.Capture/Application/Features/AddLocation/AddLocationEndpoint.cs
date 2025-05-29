@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using LowCodeHub.MinimalEndpoints.Abstractions;
+using LowCodeHub.MinimalEndpoints.Extensions;
 using Neo.Capture.Application.Interfaces.Services;
 using Neo.Capture.Domain.Operation;
 using Neo.Common.UserProvider;
@@ -16,6 +17,7 @@ namespace Neo.Capture.Application.Features.AddLocation
             app.MapPost("/add", Handle)
                .Accepts<AddLocationRequest>("application/json")
                .Produces<EndpointResult>(200)
+               .AddLogging<AddLocationEndpoint>()
                .WithName("AddLocation");
         }
 
