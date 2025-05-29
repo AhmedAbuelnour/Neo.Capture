@@ -1,8 +1,111 @@
+using LowCodeHub.MinimalEndpoints.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Neo.Capture.Application.Interfaces.Repositories;
+using Neo.Capture.Application.Interfaces.Services;
+using Neo.Capture.Application.Providers;
+using Neo.Capture.Domain.Entities;
+using Neo.Capture.Infrastructure;
+using Neo.Capture.Infrastructure.Implementations.Repositories;
+using Neo.Capture.Infrastructure.Implementations.Services;
+using Neo.Common.UserProvider;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi("neo-capture", options =>
+{
+    // Only include endpoints whose ApiExplorer GroupName matches
+    // options.ShouldInclude = apiDesc => apiDesc.GroupName == "dmc-module";
+
+    options.AddDocumentTransformer((doc, ctx, ct) =>
+    {
+        doc.Servers.Clear();
+
+        //doc.Servers.Add(new OpenApiServer
+        //{
+        //    Url = "/"
+        //});
+
+        doc.Info = new()
+        {
+            Title = "Dmc API",
+            Version = "v1"
+        };
+
+        doc.Components ??= new OpenApiComponents();
+
+        // Add security definition for JWT Bearer authentication
+        doc.Components.SecuritySchemes.Add("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+
+        doc.SecurityRequirements ??= [];
+
+        // Add global security requirement
+        doc.SecurityRequirements.Add(new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            Array.Empty<string>()
+                        }
+                    });
+
+        return Task.CompletedTask;
+    });
+});
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddAuthentication("Bearer");
+
+builder.Services.AddScoped<IPasswordHasher<Profile>, PasswordHasher<Profile>>();
+
+builder.Services.AddScoped<JwtTokenProvider>();
+
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<ILocationService, LocationService>();
+
+builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+
+builder.Services.AddValidators<Program>();
+
+//builder.Services.AddDbContext<NeoCaptureDbContext>(options =>
+//{
+//    // use postgresql for the database connection string
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("NeoCaptureDb"));
+//});
+
+builder.Services.AddDbContext<NeoCaptureDbContext>(options =>
+{
+    // use in-memory database for development purposes
+    options.UseInMemoryDatabase("NeoCaptureDb");
+});
+
+builder.Services.AddModules<Program>();
+
+builder.Services.AddEndpoints<Program>();
 
 var app = builder.Build();
 
@@ -10,32 +113,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/openapi/neo-capture.json", "Neo Capture API");
+    });
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthentication().UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapModules();
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
