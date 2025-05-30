@@ -3,7 +3,7 @@ using LowCodeHub.MinimalEndpoints.Extensions;
 using Neo.Capture.Application.Features.RemoveAttachment;
 using Neo.Capture.Application.Features.UploadAttachment;
 
-namespace Neo.Capture.Apis
+namespace Neo.Capture.Api.Modules
 {
     public class AttachmentModule : IModule
     {

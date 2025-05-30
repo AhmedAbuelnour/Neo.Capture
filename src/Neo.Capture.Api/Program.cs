@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Neo.Capture.Application.Exceptions;
 using Neo.Capture.Application.Interfaces.Repositories;
 using Neo.Capture.Application.Interfaces.Services;
 using Neo.Capture.Application.Providers;
@@ -73,6 +74,9 @@ builder.Services.AddOpenApi("neo-capture", options =>
     });
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
+
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthorization();
@@ -136,6 +140,8 @@ builder.Services.AddModules<Program>();
 builder.Services.AddEndpoints<Program>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

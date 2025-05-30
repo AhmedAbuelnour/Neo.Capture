@@ -2,7 +2,7 @@ using LowCodeHub.MinimalEndpoints.Abstractions;
 using LowCodeHub.MinimalEndpoints.Extensions;
 using Neo.Capture.Application.Features.GenerateReport;
 
-namespace Neo.Capture.Apis
+namespace Neo.Capture.Api.Modules
 {
     public class ReportModule : IModule
     {

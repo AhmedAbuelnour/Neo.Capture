@@ -3,7 +3,7 @@ using LowCodeHub.MinimalEndpoints.Extensions;
 using Neo.Capture.Application.Features.AddLocation;
 using Neo.Capture.Application.Features.CheckIn;
 
-namespace Neo.Capture.Apis
+namespace Neo.Capture.Api.Modules
 {
     public class LocationModule : IModule
     {
