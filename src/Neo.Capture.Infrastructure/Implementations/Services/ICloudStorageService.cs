@@ -1,6 +1,7 @@
-﻿using Google;
+using Google;
 using Google.Cloud.Storage.V1;
 using Neo.Capture.Application.Interfaces.Services;
+using System.IO;
 
 namespace Neo.Capture.Infrastructure.Implementations.Services
 {
@@ -120,6 +121,20 @@ namespace Neo.Capture.Infrastructure.Implementations.Services
             {
                 throw new InvalidOperationException($"Failed to check if file {fileName} exists in bucket {bucketName}", ex);
             }
+        }
+
+        public async Task<Stream> DownloadFileAsync(string bucketName, string fileName, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(bucketName))
+                throw new ArgumentException("Bucket name cannot be null or empty", nameof(bucketName));
+
+            if (string.IsNullOrWhiteSpace(fileName))
+                throw new ArgumentException("File name cannot be null or empty", nameof(fileName));
+
+            MemoryStream memoryStream = new();
+            await _storageClient.DownloadObjectAsync(bucketName, fileName, memoryStream, cancellationToken: cancellationToken);
+            memoryStream.Position = 0;
+            return memoryStream;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Neo.Capture.Application.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Neo.Capture.Application.Interfaces.Repositories;
 using Neo.Capture.Domain.Entities;
 
 namespace Neo.Capture.Infrastructure.Implementations.Repositories
@@ -17,6 +18,14 @@ namespace Neo.Capture.Infrastructure.Implementations.Repositories
             _dbContext.Set<CheckInLocation>().Add(checkInLocation);
 
             return await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<CheckInLocation>> GetCheckInsByProfileAsync(Guid profileId, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Set<CheckInLocation>()
+                                   .Include(c => c.ProfileLocation)
+                                   .Where(c => c.ProfileLocation.ProfileId == profileId)
+                                   .ToListAsync(cancellationToken);
         }
     }
 }

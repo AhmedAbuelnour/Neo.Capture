@@ -113,6 +113,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<ILocationService, LocationService>();
 
+builder.Services.AddScoped<IReportService, ReportService>();
+
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
 builder.Services.AddValidators<Program>();
