@@ -8,5 +8,6 @@ namespace Neo.Capture.Application.Interfaces.Services
         Task<string> UploadFileAsync(string bucketName, IFormFile file, string customFileName, CancellationToken cancellationToken);
         Task<bool> RemoveFileAsync(string bucketName, string fileName, CancellationToken cancellationToken);
         Task<bool> FileExistsAsync(string bucketName, string fileName, CancellationToken cancellationToken);
+        Task<byte[]> DownloadFileAsync(string bucketName, string fileName, CancellationToken cancellationToken);
     }
 }
