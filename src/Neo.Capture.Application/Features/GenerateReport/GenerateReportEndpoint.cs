@@ -1,12 +1,12 @@
 using ErrorOr;
 using LowCodeHub.MinimalEndpoints.Abstractions;
 using LowCodeHub.MinimalEndpoints.Extensions;
+using LowCodeHub.MinimalEndpoints.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Neo.Capture.Application.Interfaces.Services;
-using Neo.Capture.Domain.Operation;
 
 namespace Neo.Capture.Application.Features.GenerateReport
 {
@@ -22,19 +22,14 @@ namespace Neo.Capture.Application.Features.GenerateReport
 
         public async ValueTask<IResult> Handle([FromQuery(Name = "phoneNumber")] string phoneNumber, CancellationToken cancellationToken)
         {
-            ErrorOr<ReportFile> result = await _reportService.GenerateReportAsync(phoneNumber, cancellationToken);
+            ErrorOr<ReportFile> generateReportResult = await _reportService.GenerateReportAsync(phoneNumber, cancellationToken);
 
-            if (result.IsError)
+            if (generateReportResult.IsError)
             {
-                return TypedResults.UnprocessableEntity(new EndpointResult
-                {
-                    IsSuccess = false,
-                    ErrorCode = result.FirstError.Code,
-                    ErrorMessage = result.FirstError.Description
-                });
+                return TypedResults.UnprocessableEntity(EndpointResult.Failure(generateReportResult.FirstError));
             }
 
-            return TypedResults.File(result.Value.Content, "application/zip", result.Value.FileName);
+            return TypedResults.File(generateReportResult.Value.Content, "application/zip", generateReportResult.Value.FileName);
         }
     }
 }

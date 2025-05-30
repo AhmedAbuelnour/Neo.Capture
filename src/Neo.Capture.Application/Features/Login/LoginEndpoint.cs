@@ -9,7 +9,6 @@ using Neo.Capture.Application.Features.Register;
 using Neo.Capture.Application.Interfaces.Services;
 using Neo.Capture.Application.Providers;
 using Neo.Capture.Domain.Entities;
-using Neo.Capture.Domain.Operation;
 using System.Text.RegularExpressions;
 
 namespace Neo.Capture.Application.Features.Login
@@ -69,21 +68,12 @@ namespace Neo.Capture.Application.Features.Login
 
             if (loginResult.IsError)
             {
-                return TypedResults.UnprocessableEntity(new EndpointResult
-                {
-                    IsSuccess = false,
-                    ErrorCode = loginResult.FirstError.Code,
-                    ErrorMessage = loginResult.FirstError.Description
-                });
+                return TypedResults.UnprocessableEntity(EndpointResult.Failure(loginResult.FirstError));
             }
 
             JwtResponse jwtResponse = await jwtTokenProvider.GetJwtAsync(loginResult.Value, cancellationToken);
 
-            return TypedResults.Ok(new EndpointResult<LoginResponse>
-            {
-                IsSuccess = true,
-                Value = new LoginResponse(jwtResponse.AccessToken),
-            });
+            return TypedResults.Ok(EndpointResult<LoginResponse>.Success(new LoginResponse(jwtResponse.AccessToken)));
         }
     }
 }

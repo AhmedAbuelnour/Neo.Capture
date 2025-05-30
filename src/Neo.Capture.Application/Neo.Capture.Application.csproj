@@ -6,7 +6,7 @@
   </PropertyGroup>
 	
   <ItemGroup>
-    <PackageReference Include="LowCodeHub.MinimalEndpoints" Version="0.0.5" />
+    <PackageReference Include="LowCodeHub.MinimalEndpoints" Version="0.0.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
 	<PackageReference Include="Neo.Common.UserProvider" Version="0.0.1" />
   </ItemGroup>

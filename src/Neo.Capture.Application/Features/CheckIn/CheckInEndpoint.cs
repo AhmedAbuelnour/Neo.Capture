@@ -1,11 +1,11 @@
 ﻿using ErrorOr;
 using LowCodeHub.MinimalEndpoints.Abstractions;
 using LowCodeHub.MinimalEndpoints.Extensions;
+using LowCodeHub.MinimalEndpoints.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Neo.Capture.Application.Interfaces.Services;
-using Neo.Capture.Domain.Operation;
 using Neo.Common.UserProvider;
 using Neo.Common.UserProvider.Models;
 
@@ -33,18 +33,10 @@ namespace Neo.Capture.Application.Features.CheckIn
 
             if (checkInResult.IsError)
             {
-                return TypedResults.UnprocessableEntity(new EndpointResult
-                {
-                    IsSuccess = false,
-                    ErrorCode = checkInResult.FirstError.Code,
-                    ErrorMessage = checkInResult.FirstError.Description
-                });
+                return TypedResults.UnprocessableEntity(EndpointResult.Failure(checkInResult.FirstError));
             }
 
-            return TypedResults.Ok(new EndpointResult
-            {
-                IsSuccess = true,
-            });
+            return TypedResults.Ok(EndpointResult.Success());
         }
     }
 }

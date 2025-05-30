@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Routing;
 using Neo.Capture.Application.Interfaces.Services;
 using Neo.Capture.Application.Providers;
 using Neo.Capture.Domain.Entities;
-using Neo.Capture.Domain.Operation;
 using System.Text.RegularExpressions;
 
 
@@ -68,21 +67,12 @@ namespace Neo.Capture.Application.Features.Register
 
             if (registerResults.IsError)
             {
-                return TypedResults.UnprocessableEntity(new EndpointResult
-                {
-                    IsSuccess = false,
-                    ErrorCode = registerResults.FirstError.Code,
-                    ErrorMessage = registerResults.FirstError.Description
-                });
+                return TypedResults.UnprocessableEntity(EndpointResult.Failure(registerResults.FirstError));
             }
 
             JwtResponse jwtResponse = await jwtTokenProvider.GetJwtAsync(registerResults.Value, cancellationToken);
 
-            return TypedResults.Ok(new EndpointResult<RegisterResponse>
-            {
-                IsSuccess = true,
-                Value = new RegisterResponse(jwtResponse.AccessToken),
-            });
+            return TypedResults.Ok(EndpointResult<RegisterResponse>.Success(new RegisterResponse(jwtResponse.AccessToken)));
         }
     }
 }
