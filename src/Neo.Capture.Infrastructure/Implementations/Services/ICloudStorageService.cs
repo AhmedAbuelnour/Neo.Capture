@@ -123,5 +123,25 @@ namespace Neo.Capture.Infrastructure.Implementations.Services
                 throw new InvalidOperationException($"Failed to check if file {fileName} exists in bucket {bucketName}", ex);
             }
         }
+
+        public async Task<byte[]> DownloadFileAsync(string bucketName, string fileName, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(bucketName))
+                throw new ArgumentException("Bucket name cannot be null or empty", nameof(bucketName));
+
+            if (string.IsNullOrWhiteSpace(fileName))
+                throw new ArgumentException("File name cannot be null or empty", nameof(fileName));
+
+            try
+            {
+                using MemoryStream stream = new();
+                await _storageClient.DownloadObjectAsync(bucketName, fileName, stream, cancellationToken: cancellationToken);
+                return stream.ToArray();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to download file {fileName} from bucket {bucketName}", ex);
+            }
+        }
     }
 }
