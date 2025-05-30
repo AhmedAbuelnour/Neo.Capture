@@ -115,6 +115,8 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
+builder.Services.AddScoped<IReportService, ReportService>();
+
 builder.Services.AddValidators<Program>();
 
 //builder.Services.AddDbContext<NeoCaptureDbContext>(options =>
