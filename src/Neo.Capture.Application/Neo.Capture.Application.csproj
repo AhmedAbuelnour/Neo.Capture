@@ -1,12 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+	
   <ItemGroup>
-    <ProjectReference Include="..\Neo.Capture.Domain\Neo.Capture.Domain.csproj" />
     <PackageReference Include="LowCodeHub.MinimalEndpoints" Version="0.0.5" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
+	<PackageReference Include="Neo.Common.UserProvider" Version="0.0.1" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Neo.Capture.Domain\Neo.Capture.Domain.csproj" />
   </ItemGroup>
 </Project>

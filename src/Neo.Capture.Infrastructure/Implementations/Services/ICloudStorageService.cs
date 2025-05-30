@@ -1,5 +1,7 @@
 ﻿using Google;
 using Google.Cloud.Storage.V1;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Neo.Capture.Application.Interfaces.Services;
 
 namespace Neo.Capture.Infrastructure.Implementations.Services

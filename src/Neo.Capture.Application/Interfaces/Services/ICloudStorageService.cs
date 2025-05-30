@@ -1,4 +1,6 @@
-﻿namespace Neo.Capture.Application.Interfaces.Services
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Neo.Capture.Application.Interfaces.Services
 {
     public interface ICloudStorageService
     {

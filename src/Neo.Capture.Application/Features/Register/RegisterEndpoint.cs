@@ -2,11 +2,15 @@
 using LowCodeHub.MinimalEndpoints.Abstractions;
 using LowCodeHub.MinimalEndpoints.Extensions;
 using LowCodeHub.MinimalEndpoints.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Neo.Capture.Application.Interfaces.Services;
 using Neo.Capture.Application.Providers;
 using Neo.Capture.Domain.Entities;
 using Neo.Capture.Domain.Operation;
 using System.Text.RegularExpressions;
+
 
 namespace Neo.Capture.Application.Features.Register
 {
